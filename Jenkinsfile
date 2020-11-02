@@ -1,4 +1,5 @@
 pipeline {
+    
     environment {
         registry = "jyotsnaakula/d0ckerize_jenkins"
         registryCredential = 'docker-hub'
