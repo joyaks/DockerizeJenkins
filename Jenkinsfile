@@ -1,37 +1,43 @@
-node {
-    
-	
-
-    env.AWS_ECR_LOGIN=true
-    def newApp
-    def registry = 'gustavoapolinario/microservices-node-todo-frontend'
-    def registryCredential = 'dockerhub'
-	
-	stage('Git') {
-		git 'https://github.com/gustavoapolinario/microservices-node-example-todo-frontend.git'
-	}
-	stage('Build') {
-		sh 'npm install'
-		sh 'npm run bowerInstall'
-	}
-	stage('Test') {
-		sh 'npm test'
-	}
-	stage('Building image') {
-        docker.withRegistry( 'https://' + registry, registryCredential ) {
-		    def buildName = registry + ":$BUILD_NUMBER"
-			newApp = docker.build buildName
-			newApp.push()
-        }
-	}
-	stage('Registring image') {
-        docker.withRegistry( 'https://' + registry, registryCredential ) {
-    		newApp.push 'latest2'
-        }
-	}
-    stage('Removing image') {
-        sh "docker rmi $registry:$BUILD_NUMBER"
-        sh "docker rmi $registry:latest"
+pipeline {
+    environment {
+        registry = "jyotsnaakula/d0ckerize_jenkins"
+        registryCredential = 'docker-hub'
+        dockerImage=''
     }
-    
+    agent any
+    tools {nodejs "NodeJS" }
+    stages {
+        stage('Cloning Git') {
+            steps{
+                git 'https://github.com/joyaks/DockerizeJenkins.git'
+            }
+        }
+        stage('Build') {
+            steps{
+                sh 'npm install'
+                sh 'npm run bowerInstall'
+            }    
+        }
+        stage('Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Building image') {
+            steps{
+                script {
+                    dockerImage=docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+        stage('Deploy image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
 }
