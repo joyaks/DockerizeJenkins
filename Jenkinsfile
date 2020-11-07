@@ -1,9 +1,9 @@
 pipeline {
-    
     environment {
         registry = "jyotsnaakula/d0ckerize_jenkins"
         registryCredential = 'docker-hub'
         dockerImage=''
+        di="jyotsnaakula/ubuntu_lab6.6"
     }
     agent any
     tools {nodejs "NodeJS" }
@@ -37,6 +37,15 @@ pipeline {
                     docker.withRegistry( '', registryCredential ) {
                         dockerImage.push()
                     }
+                }
+            }
+        }
+        stage('Deploy container') {
+            steps{
+                script {
+                    dname= registry + ":$BUILD_NUMBER"
+                    sh "docker rmi -f ${dname}"
+                    dockerImage.run("--name=test")
                 }
             }
         }
