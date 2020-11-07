@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Cloning Git') {
             steps{
+                # testing
                 git 'https://github.com/joyaks/DockerizeJenkins.git'
             }
         }
