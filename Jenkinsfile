@@ -40,12 +40,12 @@ pipeline {
                 }
             }
         }
-        stage('Deploy container') {
+	    stage('Deploy container') {
             steps{
                 script {
                     dname= registry + ":$BUILD_NUMBER"
                     sh "docker rmi -f ${dname}"
-                    dockerImage.run("--name=testing")
+                    dockerImage.run("--name=test")
                 }
             }
         }
