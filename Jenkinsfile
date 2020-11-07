@@ -45,7 +45,7 @@ pipeline {
                 script {
                     dname= registry + ":$BUILD_NUMBER"
                     sh "docker rmi -f ${dname}"
-                    dockerImage.run("--name=test")
+                    dockerImage.run("--name=NodeJS")
                 }
             }
         }
