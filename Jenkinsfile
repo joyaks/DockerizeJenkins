@@ -3,7 +3,6 @@ pipeline {
         registry = "jyotsnaakula/d0ckerize_jenkins"
         registryCredential = 'docker-hub'
         dockerImage=''
-        di="jyotsnaakula/ubuntu_lab6.6"
     }
     agent any
     tools {nodejs "NodeJS" }
